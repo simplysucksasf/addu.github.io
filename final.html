@@ -1,0 +1,274 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Will you go on a date with me?</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@300;400;600&family=Dancing+Script:wght@500&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --bg1: #fff5f7; /* very light blush */
+      --bg2: #fce9ee; /* soft pink */
+      --accent: #ff6b9a; /* blush */
+      --accent-dark: #c63b66; /* deep rose */
+      --muted: #6b5b6d; /* muted purple-grey */
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%;margin:0;font-family:Inter,system-ui,Segoe UI,Roboto,Arial;background:linear-gradient(180deg,var(--bg1) 0%, var(--bg2) 100%);color:#2a2030}
+
+    .wrap{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:32px}
+
+    .card{
+      width:min(980px,94%);
+      background:linear-gradient(180deg, rgba(255,255,255,0.9), rgba(255,250,250,0.82));
+      border-radius:20px;box-shadow:0 12px 40px rgba(16,12,20,0.12);display:grid;grid-template-columns:1fr 380px;gap:28px;padding:28px;align-items:center;overflow:hidden;position:relative
+    }
+
+    .card::after{content:'';position:absolute;right:-120px;top:-120px;width:300px;height:300px;background:radial-gradient(circle at 30% 30%, rgba(255,107,154,0.15), transparent 30%);transform:rotate(10deg);}    
+
+    .left{padding:12px}
+    .brand{display:flex;gap:10px;align-items:center}
+    .heart{width:54px;height:54px;border-radius:12px;background:linear-gradient(135deg,var(--accent),var(--accent-dark));display:inline-flex;align-items:center;justify-content:center;color:white;font-size:24px;font-weight:700;box-shadow:0 8px 24px rgba(198,59,102,0.18)}
+    h1{font-family:'Playfair Display',serif;margin:6px 0 8px;font-size:34px;color:#371b2b}
+    p.lead{margin:0;color:var(--muted);font-size:16px}
+
+    .buttons{margin-top:22px;display:flex;gap:14px;align-items:center}
+    .btn{padding:12px 18px;border-radius:12px;border:0;font-weight:600;cursor:pointer;font-size:16px;transition:transform .18s ease,box-shadow .18s ease}
+    .btn:active{transform:translateY(1px)}
+    .yes{background:linear-gradient(90deg,#ffd1df,#ff8fb3);color:#3b1020;box-shadow:0 8px 24px rgba(255,139,165,0.18)}
+    .no{background:transparent;color:#371b2b;border:2px solid rgba(55,27,43,0.08);min-width:100px}
+
+    .hint{font-size:13px;color:var(--muted);margin-top:10px}
+
+    .right{display:flex;flex-direction:column;align-items:center;gap:12px}
+    .preview{width:100%;border-radius:14px;overflow:hidden;box-shadow:0 12px 36px rgba(20,12,18,0.06);background:linear-gradient(180deg,#fff 0%, #fff8fb 100%)}
+    .preview img{width:100%;height:240px;object-fit:cover;display:block}
+
+    .meta{padding:14px;width:100%;display:flex;flex-direction:column;align-items:flex-start}
+    .meta .title{font-weight:700;font-family:'Playfair Display',serif;font-size:18px;color:#3b1020}
+    .meta .sub{font-size:13px;color:var(--muted);margin-top:6px}
+
+    .smallprint{font-size:13px;color:var(--muted);margin-top:8px;text-align:center}
+
+    /* subtle floating hearts in background */
+    .bg-hearts{position:absolute;left:8%;top:-40px;opacity:0.12;font-size:160px;color:var(--accent);transform:rotate(-12deg);pointer-events:none}
+
+    /* success modal */
+    .modal{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:linear-gradient(180deg, rgba(20,10,16,0.38), rgba(8,4,8,0.6));z-index:40;padding:20px}
+    .modalCard{max-width:820px;width:100%;background:linear-gradient(180deg,#fff 0%, #fff6f9 100%);border-radius:16px;padding:20px;box-shadow:0 30px 80px rgba(12,6,12,0.6);}    
+
+    /* handwritten note style */
+    .note{font-family:'Dancing Script',cursive;font-size:20px;color:#6b2b3a;margin-top:12px;background:linear-gradient(90deg, rgba(255,250,250,0.6), rgba(255,245,247,0.6));padding:12px;border-radius:10px;border:1px dashed rgba(198,59,102,0.06)}
+
+    /* animations */
+    .fadeIn{animation:fadeIn .42s ease both}
+    @keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+
+    .float{animation:float 6s ease-in-out infinite}
+    @keyframes float{0%{transform:translateY(0)}50%{transform:translateY(-6px)}100%{transform:translateY(0)}}
+
+    /* playful shake */
+    .shake{animation:shake 360ms ease}
+    @keyframes shake{0%{transform:translateX(0)}25%{transform:translateX(-6px)}50%{transform:translateX(6px)}75%{transform:translateX(-4px)}100%{transform:translateX(0)}}
+
+    /* responsive */
+    @media (max-width:900px){.card{grid-template-columns:1fr;}.preview img{height:180px}}
+  </style>
+</head>
+<body>
+
+<div class="wrap">
+  <div class="card">
+    <div class="bg-hearts">❤ ❤</div>
+    <div class="left">
+      <div class="brand">
+        <div class="heart float">❤</div>
+        <div>
+          <div style="font-size:12px;color:var(--muted);letter-spacing:1px">A small question for</div>
+          <h1 id="headline"> <span id="targetName">My Addu</span>, will you go on a date with me?</h1>
+        </div>
+      </div>
+      <p class="lead" id="lead">A cozy evening, laughter, and my full attention. I promise to make it special — just say the word.</p>
+
+      <div class="buttons" id="buttons">
+        <button class="btn yes" id="yesBtn">Yes, of course ❤️</button>
+        <button class="btn no" id="noBtn">No (click me)</button>
+      </div>
+      <div class="hint">Tip: the 'No' button is a little shy  it likes to move.</div>
+    </div>
+
+    <div class="right">
+      <div class="preview">
+        <img id="venueImg" src="https://b.zmtcdn.com/data/pictures/5/20505575/b471f286b2e29e679756740d21b6add9.jpg" alt="venue"/>
+        <div class="meta">
+          <div class="title" id="venueTitle">Zurii Punjabi Bagh</div>
+          <div class="sub" id="venueSub">Sunday, March 2, 2025 • 7:30 PM — Dinner & Movie</div>
+          <div class="smallprint" id="venueDesc">Meet at the main entrance — I will be there early with a small surprise.</div>
+        </div>
+      </div>
+
+      <div class="smallprint"></div>
+    </div>
+  </div>
+</div>
+
+<!-- success modal template (hidden) -->
+<template id="modalTpl">
+  <div class="modal fadeIn">
+    <div class="modalCard">
+      <div style="display:flex;gap:14px;align-items:flex-start;flex-wrap:wrap">
+        <div style="flex:1;min-width:240px">
+          <img id="modalImage" src="" style="width:100%;height:220px;object-fit:cover;border-radius:10px;display:block" alt="venue" />
+        </div>
+        <div style="flex:1;min-width:220px">
+          <div style="font-family:'Playfair Display',serif;font-size:22px;font-weight:700;margin-bottom:8px" id="modalTitle">You're the best!</div>
+          <div style="color:var(--muted);font-size:15px;margin-bottom:8px" id="modalDate">Sunday, March 2, 2025</div>
+          <div style="color:var(--muted);font-size:15px;margin-bottom:12px" id="modalTime">7:30 PM — Dinner & Movie</div>
+          <p style="margin:0;color:#442c36;font-size:15px" id="modalMsg">Thank you so much — I'm really grateful. I can't wait to spend this evening with you.</p>
+          <div class="note" id="handwrittenNote">(a small handwritten note will appear here)</div>
+        </div>
+      </div>
+      <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:18px">
+        <button id="closeBtn" style="padding:10px 12px;border-radius:10px;border:0;background:transparent;color:var(--muted)">Close</button>
+      </div>
+    </div>
+  </div>
+</template>
+
+<script>
+  // ---- CONFIG: change these values to personalise ----
+  const CONFIG = {
+    targetName: 'My Addu',
+    leadText: 'A cutu date with YOUR CUTU. I am so excited for this date. just say the word.',
+    venueName: 'Zurii Punjabi Bagh',
+    dateText: 'Saturday, 29 November, 2025',
+    timeText: '4:30 PM — After Allen',
+    imageURL: 'https://b.zmtcdn.com/data/pictures/5/20505575/b471f286b2e29e679756740d21b6add9.jpg',
+    successMessage: "Thank you so much my baby. I'm so grateful and so excited. I can't wait to spend this evening with you. This is going to be so cutututu. Once again, happy 2 years my love. This date will be dedicated to us being together for 2 FRICKING YEARS OMG",
+    handwrittenNote: "i love you so so so muchhh my addu"
+  };
+  // ---------------------------------------------------
+
+  // apply config
+  document.getElementById('targetName').innerText = CONFIG.targetName;
+  document.getElementById('lead').innerText = CONFIG.leadText;
+  document.getElementById('venueTitle').innerText = CONFIG.venueName;
+  document.getElementById('venueSub').innerText = `${CONFIG.dateText} • ${CONFIG.timeText}`;
+  document.getElementById('venueImg').src = CONFIG.imageURL;
+  document.getElementById('venueDesc').innerText = 'Meet at the main entrance — I will be there early with a small surprise.';
+
+  const yesBtn = document.getElementById('yesBtn');
+  const noBtn = document.getElementById('noBtn');
+  const buttons = document.getElementById('buttons');
+
+  // Initially the No button is clickable. But when hovered or attempted to click it moves around.
+  let attempts = 0;
+  let stuck = false;
+
+  function randomPositionWithin(container, el){
+    const crect = container.getBoundingClientRect();
+    const erect = el.getBoundingClientRect();
+    // compute random x,y within container bounds (allow overlap slightly)
+    const padding = 8;
+    const maxX = Math.max(padding, crect.width - erect.width - padding);
+    const x = Math.random() * maxX;
+    const y = Math.random() * 6 - 3; // small vertical jitter
+    return {x,y};
+  }
+
+  // On mouseenter, move the no button to a new X position (relative transform).
+  noBtn.addEventListener('mouseenter', (e)=>{
+    attempts++;
+    // after many attempts, make it extra playful and swap order or jump far
+    if(attempts > 4 && Math.random() < 0.6){
+      // swap order with yes or move to end
+      if(noBtn.nextElementSibling === yesBtn) buttons.insertBefore(noBtn, yesBtn);
+      else buttons.appendChild(noBtn);
+      noBtn.classList.add('shake');
+      setTimeout(()=>noBtn.classList.remove('shake'), 420);
+    }
+
+    // compute new random translate
+    const pos = randomPositionWithin(buttons, noBtn);
+    // make distance grow with attempts
+    const strength = Math.min(1.8, 0.6 + attempts*0.26);
+    const tx = (pos.x - noBtn.offsetLeft) * strength;
+    const ty = pos.y;
+    noBtn.style.transition = 'transform 220ms cubic-bezier(.2,.9,.2,1)';
+    noBtn.style.transform = `translate(${tx}px, ${ty}px)`;
+
+    // tiny sound feedback (if allowed)
+    try{ const ctx = new (window.AudioContext||window.webkitAudioContext)(); const o = ctx.createOscillator(); const g = ctx.createGain(); o.type='sine'; o.frequency.value = 420+Math.random()*200; g.gain.value = 0.0008; o.connect(g); g.connect(ctx.destination); o.start(); o.stop(ctx.currentTime+0.02);}catch(e){}
+  });
+
+  // If user tries to click quickly: cancel the event and move it further
+  noBtn.addEventListener('click', (e)=>{
+    e.preventDefault();
+    attempts++;
+    noBtn.style.transform = 'translateY(-8px)';
+    setTimeout(()=>{ noBtn.style.transform = ''; }, 320);
+  });
+
+  // Periodically reset transform for natural behaviour
+  setInterval(()=>{ if(Math.random() < 0.25) noBtn.style.transform = ''; }, 2600);
+
+  // Keyboard accessibility: try to keep it tricky but not hostile
+  noBtn.addEventListener('focus', ()=>{ noBtn.blur(); yesBtn.focus(); });
+
+  // YES button: show sweet modal with details + add to calendar
+  yesBtn.addEventListener('click', ()=>{
+    const tpl = document.getElementById('modalTpl');
+    const node = tpl.content.cloneNode(true);
+    node.querySelector('#modalImage').src = CONFIG.imageURL;
+    node.querySelector('#modalTitle').innerText = `You're the best, ${CONFIG.targetName}!`;
+    node.querySelector('#modalDate').innerText = CONFIG.dateText;
+    node.querySelector('#modalTime').innerText = CONFIG.timeText;
+    node.querySelector('#modalMsg').innerText = CONFIG.successMessage;
+    node.querySelector('#handwrittenNote').innerText = CONFIG.handwrittenNote;
+
+    document.body.appendChild(node);
+    // wire buttons
+    const modal = document.querySelector('.modal');
+    const closeBtn = document.getElementById('closeBtn');
+
+    closeBtn.addEventListener('click', ()=>{ modal.remove(); });
+
+    // little hearts confetti
+    startHearts();
+  });
+
+  // Simple .ICS generator (best-effort). You can replace with precise datetimes if desired.
+  function generateICS(title, dateText, timeText){
+    const start = new Date(Date.now()+24*60*60*1000); // placeholder: tomorrow
+    const end = new Date(start.getTime()+2*60*60*1000);
+    function fmt(d){ return d.toISOString().replace(/[-:]/g,'').split('.')[0]+'Z'; }
+    return `BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//date-proposal//EN
+BEGIN:VEVENT
+UID:${Date.now()}@proposal
+DTSTAMP:${fmt(new Date())}
+DTSTART:${fmt(start)}
+DTEND:${fmt(end)}
+SUMMARY:${title}
+DESCRIPTION:${timeText} at ${title}
+END:VEVENT
+END:VCALENDAR`;
+  }
+
+  // Hearts confetti using canvas
+  function startHearts(){
+    const cvs = document.createElement('canvas'); cvs.style.position='fixed'; cvs.style.left=0; cvs.style.top=0; cvs.style.pointerEvents='none'; cvs.style.zIndex=9999; document.body.appendChild(cvs);
+    const ctx = cvs.getContext('2d'); let w = cvs.width = innerWidth; let h = cvs.height = innerHeight;
+    const hearts = [];
+    const textures = ['❤','💖','💘','💕'];
+    for(let i=0;i<60;i++) hearts.push({x:Math.random()*w,y:Math.random()*-h,vx:(Math.random()-0.5)*1,vy:1+Math.random()*2,s:12+Math.random()*18,t:textures[Math.floor(Math.random()*textures.length)]});
+    let raf;
+    function tick(){ ctx.clearRect(0,0,w,h); for(const p of hearts){ p.x+=p.vx; p.y+=p.vy; p.vy+=0.01; if(p.y>h+40){ p.y=-40; p.x=Math.random()*w; p.vy=1+Math.random()*2; } ctx.font = `${p.s}px serif`; ctx.fillText(p.t, p.x, p.y);} raf = requestAnimationFrame(tick);} tick();
+    setTimeout(()=>{ cancelAnimationFrame(raf); cvs.remove(); }, 9000);
+    addEventListener('resize', ()=>{ w=cvs.width=innerWidth; h=cvs.height=innerHeight; });
+  }
+
+</script>
+</body>
+</html>
